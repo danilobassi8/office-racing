@@ -4,10 +4,12 @@ import { SideNav } from './Sidenav';
 export function Layout() {
   return (
     <>
-      <SideNav />
-      <main className='content'>
-        <AppRoutes />
-      </main>
+      <div className="layout w-100 h-100">
+        <SideNav />
+        <main className="content">
+          <AppRoutes />
+        </main>
+      </div>
     </>
   );
 }

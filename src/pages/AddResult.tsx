@@ -1,3 +1,9 @@
 export function AddResult() {
-    return <span>Add form</span>
+  return (
+    <div style={{ height: '100%' }}>
+      <form>
+        <input type="text" placeholder="hola"  className="result-input"/>
+      </form>
+    </div>
+  );
 }

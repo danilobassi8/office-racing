@@ -11,7 +11,7 @@ export function SideNav() {
   return (
     <nav className="sidenav">
       {NAV_ITEMS.map((item) => (
-        <div className="nav-item">
+        <div key={item.tooltip} className="nav-item">
           <NavLink to={item.to}> {item.icon}</NavLink>
         </div>
       ))}

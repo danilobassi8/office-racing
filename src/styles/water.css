@@ -81,7 +81,6 @@ body {
     'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
   line-height: 1.4;
 
-  margin: 0px auto auto calc(var(--sidenav-width) + 30px);
   padding: 0 10px;
   word-wrap: break-word;
   color: #363636;
@@ -89,6 +88,8 @@ body {
   background: #fff;
   background: var(--background-body);
   text-rendering: optimizeLegibility;
+  margin: 0px;
+  padding: 0px;
 }
 
 @media (prefers-color-scheme: dark) {

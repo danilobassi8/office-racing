@@ -1,52 +1,28 @@
-import { ComposedChart, LabelList, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
-const data = [
-  {
-    name: 'Jugador A',
-    value: 1400,
-  },
-  {
-    name: 'Jugador B',
-    value: 1506,
-  },
-
-  {
-    name: 'Jugador C',
-    value: 989,
-  },
-  {
-    name: 'Jugador D',
-    value: 1228,
-  },
-  {
-    name: 'Jugador E',
-    value: 1100,
-  },
-  {
-    name: 'Jugador F',
-    value: 1700,
-  },
-].sort((a, b) => a.value - b.value);
-
-const renderLabel = (e) => 'asd';
+import { PodiumChart } from '../components/charts/Podium';
+import { Loading } from '../components/utils/Loading';
+import { useGetFecha } from '../hooks/useFecha';
+import { useEffect } from 'react';
 
 export function Home() {
+  const { data, isLoading, error, httpCall: refreshData } = useGetFecha(1);
+
+  // call refresh on start
+  useEffect(() => {
+    console.log('useEffect');
+    refreshData();
+  }, []);
+
   return (
     <>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} layout="vertical" barCategoryGap={10}>
-          <XAxis type="number" hide />
-          <YAxis
-            type="category"
-            width={150}
-            tickFormatter={(e) => {
-              return `${data[e].name}`;
-            }}
-          />
-
-          <Bar dataKey="value" fill="#413ea0" label={{ position: 'insideLeft', fill: 'yellow', value: 'pepe' }}></Bar>
-        </BarChart>
-      </ResponsiveContainer>
+      {isLoading && <Loading style={{ height: '350px', marginTop: '25vh' }} />}
+      {isLoading == false && !error && <PodiumChart data={data} />}
+      {isLoading == false && error && (
+        <div className="w-100 d-flex align-center flex-col">
+          <h1>Error: </h1>
+          <h4>Sintax error -..,asdas {error}</h4>
+          <button onClick={refreshData}>Retry</button>
+        </div>
+      )}
     </>
   );
 }

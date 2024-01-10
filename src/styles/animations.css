@@ -1,0 +1,9 @@
+@keyframes loadingRotation {
+  from {
+    transform: rotate(-45deg);
+  }
+
+  to {
+    transform: rotate(315deg);
+  }
+}
