@@ -3,28 +3,26 @@
 }
 
 .sidenav {
-  --icon-color: blue;
+  --icon-color: rgb(9, 154, 9);
 
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  justify-content: center;
   align-items: center;
 
   width: var(--sidenav-width);
-  background-color: red;
+  background-color: #1c2128;
   height: 100%;
   position: absolute;
-  left: 10px;
+  left: 0px;
   margin: 0px;
   padding: 0px;
 
-
   .nav-item {
     height: 80px;
-    margin: 6px 0px;
+    margin: 5px 0px;
     padding: 5px;
-
-    background-color: var(--background);
+    background-color: #22272e;
     border-radius: 25%;
     transition: all 0.1s ease-in-out;
   }
