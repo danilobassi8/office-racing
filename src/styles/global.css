@@ -34,8 +34,7 @@
 }
 
 main.content {
-  background-color: red !important;
-  height: 300px;
+  height: 90vh;
   width: 100% !important;
   margin: 0px;
 
