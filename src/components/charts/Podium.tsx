@@ -10,10 +10,12 @@ export function PodiumChart({ data }) {
     return `${player.name} ${player.lastname}`;
   };
 
+  const sortedData = data?.sort((a, b) => a.time - b.time);
+
   return (
     <div className="chart podium-chart w-100 h-100">
       <ResponsiveContainer width="100%" height="95%">
-        <BarChart data={data} layout="vertical" barCategoryGap={10}>
+        <BarChart data={sortedData} layout="vertical" barCategoryGap={10}>
           <XAxis type="number" hide />
           <YAxis type="category" width={150} tickFormatter={(e) => getPlayerNameBySlackUser(data[e].player)} />
           <Bar dataKey="time" fill="#413ea0">
