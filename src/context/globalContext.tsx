@@ -33,7 +33,7 @@ export function GlobalContextProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    const isLoading = playerLoading == false && globalLoading == false;
+    const isLoading = playerLoading == true || globalLoading == true;
     setIsGlobalContextLoading(isLoading);
   }, [playerLoading, globalLoading]);
 

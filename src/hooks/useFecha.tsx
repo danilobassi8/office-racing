@@ -7,14 +7,14 @@ function parseFechaResults(result) {
   const summaryResult = {};
 
   results.forEach((result) => {
-    const { time, user } = result;
-    if (user in summaryResult) {
+    const { time, player } = result;
+    if (player in summaryResult) {
       // check if the result is better, otherwise, pass
-      if (time < summaryResult[user].time) {
-        summaryResult[user] = result;
+      if (time < summaryResult[player].time) {
+        summaryResult[player] = result;
       }
     } else {
-      summaryResult[user] = result;
+      summaryResult[player] = result;
     }
   });
   return Object.entries(summaryResult).map(([_, obj]) => obj);

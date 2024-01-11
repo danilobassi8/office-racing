@@ -19,16 +19,20 @@ export function timeToMilliseconds(minutes, seconds, milliseconds) {
   return minutes * 60 * 1000 + seconds * 1000 + milliseconds;
 }
 
-/** Function to convert ms to and object with minutes, seconds and ms. */
-export function millisecondsToTime(milliseconds) {
+/** Function to convert ms to and object with minutes, seconds and ms or to a formatted string. */
+export function millisecondsToTime(milliseconds, toString = false) {
   const minutes = Math.floor(milliseconds / (60 * 1000));
   const remainingMilliseconds = milliseconds % (60 * 1000);
   const seconds = Math.floor(remainingMilliseconds / 1000);
-  const remainingSecondsMilliseconds = remainingMilliseconds % 1000;
+  const ms = remainingMilliseconds % 1000;
 
+  if (toString) {
+    const pad = (n: number, zeros) => `${n.toString().padStart(zeros, '0')}`;
+    return `${pad(minutes, 2)}:${pad(seconds, 2)}:${pad(ms, 3)}`;
+  }
   return {
     minutes,
     seconds,
-    milliseconds: remainingSecondsMilliseconds,
+    milliseconds: ms,
   };
 }

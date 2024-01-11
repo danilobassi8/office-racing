@@ -106,7 +106,7 @@ export function AddResult() {
 
   return (
     <div className="w-100">
-      {!isGlobalContextLoading ? <Loading style={{ height: '350px', marginTop: '25vh' }} /> : <ResultForm />}
+      {isGlobalContextLoading ? <Loading style={{ height: '350px', marginTop: '25vh' }} /> : <ResultForm />}
     </div>
   );
 }
