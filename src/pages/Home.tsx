@@ -8,7 +8,6 @@ export function Home() {
 
   // call refresh on start
   useEffect(() => {
-    console.log('useEffect');
     refreshData();
   }, []);
 
@@ -19,7 +18,7 @@ export function Home() {
       {isLoading == false && error && (
         <div className="w-100 d-flex align-center flex-col">
           <h1>Error: </h1>
-          <h4>Sintax error -..,asdas {error}</h4>
+          <h4>{error}</h4>
           <button onClick={refreshData}>Retry</button>
         </div>
       )}

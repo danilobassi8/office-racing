@@ -5,27 +5,30 @@ export const useFetch = ({ url, extra = {}, parseResultsFn = undefined }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const httpCall = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(url, { ...extra });
-      if (!response.ok) throw new Error(response.statusText);
-      const json = await response.json();
-      setIsLoading(false);
+  const httpCall = useCallback(
+    async (args = {}) => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(url, { ...extra, ...args });
+        if (!response.ok) throw new Error(response.statusText);
+        const json = await response.json();
+        setIsLoading(false);
 
-      // we could want to parse results before setting the data
-      if (parseResultsFn) {
-        setData(parseResultsFn(json));
-      } else {
-        setData(json);
+        // we could want to parse results before setting the data
+        if (parseResultsFn) {
+          setData(parseResultsFn(json));
+        } else {
+          setData(json);
+        }
+        setError(null);
+        return json;
+      } catch (error) {
+        setError(`${error} Could not Fetch Data `);
+        setIsLoading(false);
       }
-      setError(null);
-      return json;
-    } catch (error) {
-      setError(`${error} Could not Fetch Data `);
-      setIsLoading(false);
-    }
-  }, [url, extra, parseResultsFn]);
+    },
+    [url, extra, parseResultsFn]
+  );
 
   return { data, isLoading, error, httpCall };
 };

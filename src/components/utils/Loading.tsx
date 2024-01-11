@@ -1,6 +1,6 @@
 import { LoadingIcon } from '../../icons/LoadingIcon';
 
-export function Loading({ style }) {
+export function Loading({ style = {} }) {
   return (
     <div style={{ overflow: 'hidden' }}>
       <div>
