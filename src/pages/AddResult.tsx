@@ -4,6 +4,11 @@ import { Loading } from '../components/utils/Loading';
 import { timeToMilliseconds } from '../utils/utils';
 import { usePostFechaResult } from '../hooks/useFecha';
 
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
+
 function ResultForm() {
   const { globalData, playersData } = useContext(GlobalContext);
   const [carValue, setCarValue] = useState(undefined);
@@ -22,10 +27,12 @@ function ResultForm() {
     // basic validation
     const { car, time, player } = Object.fromEntries(fields);
 
-    console.log({ car, time, player });
     if (!car || !time || !player) {
-      alert('Completá todos los campos.');
-
+      MySwal.fire({
+        title: 'Error',
+        icon: 'error',
+        text: 'Completá todos los campos.',
+      });
       return;
     }
 
@@ -35,20 +42,37 @@ function ResultForm() {
         .split(/[.,:\s]/)
         .map((el) => parseInt(el));
 
-      if (!min || !sec || !ms) {
+      if ([min, sec, ms].some((n) => n == undefined)) {
         throw new Error('Bad format');
       }
 
       const totalMs = timeToMilliseconds(min, sec, ms);
       fields.set('time', totalMs);
     } catch (error) {
-      alert('Error de formato de tiempo. Usá MM:ss:mmm');
+      MySwal.fire({
+        title: 'Error',
+        icon: 'error',
+        text: 'Formato de tiempo incorrecto. Usá MM:ss:mmm\nTambién se pueden usar puntos. ',
+      });
       return;
     }
 
     fields.append('fecha', `Fecha${globalData?.FechaActual}`);
     fields.append('timestamp', Date.now().toString());
-    sendResult({ body: fields }).then(() => console.log('#OK'));
+
+    MySwal.fire({
+      title: 'Enviando resultados ...',
+      didOpen: () => {
+        MySwal.showLoading();
+        sendResult({ body: fields }).then(() => {
+          MySwal.fire({
+            title: 'Listo',
+            icon: 'success',
+            text: 'Tus resultados fueron guardados exitosamente. ',
+          });
+        });
+      },
+    });
   }
 
   return (

@@ -28,15 +28,13 @@ export function GlobalContextProvider({ children }) {
   });
 
   useEffect(() => {
-    loadGlobals().then(() => console.log('listo globals'));
-    loadPlayers().then(() => console.log('listo players'));
-    console.log('CARGANDO EL GLOBAL CONNTEXT');
+    loadGlobals();
+    loadPlayers();
   }, []);
 
   useEffect(() => {
     const isLoading = playerLoading == false && globalLoading == false;
     setIsGlobalContextLoading(isLoading);
-    console.log('TE METI', isLoading);
   }, [playerLoading, globalLoading]);
 
   return (
