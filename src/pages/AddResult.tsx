@@ -79,7 +79,7 @@ function ResultForm() {
     <div style={{ width: 'min(800px, 100%)', margin: 'auto' }}>
       <h1 className="text-center">Carga de tiempos para fecha {globalData?.FechaActual}.</h1>
 
-      <form className="d-flex flex-col" style={{ gap: '10px' }} onSubmit={handleSubmit}>
+      <form className="d-flex flex-col" style={{ gap: '10px', marginTop: '40px' }} onSubmit={handleSubmit}>
         <select name="player" onChange={onPlayerChange}>
           <option value="">Jugador</option>
           {playersData?.map((player) => (
