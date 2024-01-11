@@ -5,7 +5,7 @@ import { AddResult } from './pages/AddResult';
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="" element={<Home />}></Route>
+      <Route path="home" element={<Home />}></Route>
       <Route path="add" element={<AddResult />}></Route>
     </Routes>
   );
