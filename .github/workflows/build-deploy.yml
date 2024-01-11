@@ -1,0 +1,22 @@
+name: React App Github deploy
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install & Build
+        run: npm i && npm run build
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-actions@4.1.1
+        with:
+          branch: gh-pages
+          folder: dist
