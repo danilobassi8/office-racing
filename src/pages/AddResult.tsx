@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { GlobalContext } from '../context/globalContext';
 import { Loading } from '../components/utils/Loading';
-import { timeToMilliseconds } from '../utils/utils';
+import { timeInputToMilliseconds } from '../utils/utils';
 import { usePostFechaResult } from '../hooks/useFecha';
 
 import Swal from 'sweetalert2';
@@ -37,16 +37,7 @@ function ResultForm() {
     }
 
     try {
-      const [min, sec, ms] = time
-        .toString()
-        .split(/[.,:\s]/)
-        .map((el) => parseInt(el));
-
-      if ([min, sec, ms].some((n) => n == undefined)) {
-        throw new Error('Bad format');
-      }
-
-      const totalMs = timeToMilliseconds(min, sec, ms);
+      const totalMs = timeInputToMilliseconds(time);
       fields.set('time', totalMs);
     } catch (error) {
       MySwal.fire({

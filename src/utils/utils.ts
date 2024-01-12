@@ -14,9 +14,24 @@ export function mapResponseArrayToJson(array) {
   return results;
 }
 
-/** Given a time in Minutes, seconds and ms, it will return the number of ms. */
-export function timeToMilliseconds(minutes, seconds, milliseconds) {
-  return minutes * 60 * 1000 + seconds * 1000 + milliseconds;
+/** Given a user input (expected in MM:ss:mmm), it will return the number of milliseconds. */
+export function timeInputToMilliseconds(userInput) {
+  const [min, sec, ms] = userInput
+    .toString()
+    .split(/[.,:\s]/)
+    .map((el) => parseInt(el));
+
+  if ([min, sec, ms].some((n) => n == undefined) || sec >= 60 || ms >= 1000) {
+    throw new Error('Bad format');
+  }
+
+  const result = min * 60 * 1000 + sec * 1000 + ms;
+
+  if (isNaN(result)) {
+    throw new Error('Result is not a number');
+  }
+
+  return result;
 }
 
 /** Function to convert ms to and object with minutes, seconds and ms or to a formatted string. */
