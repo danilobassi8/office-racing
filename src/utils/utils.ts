@@ -11,7 +11,18 @@ export function mapResponseArrayToJson(array) {
     });
     results.push(res);
   }
+
   return results;
+}
+
+export function matchInfoWithPlayers(json: any[], playerData: any[], key = 'slack') {
+  return playerData?.map((player) => {
+    const results = json.find((el) => el[key] == player[key]);
+    return {
+      ...player,
+      ...results,
+    };
+  });
 }
 
 /** Given a user input (expected in MM:ss:mmm), it will return the number of milliseconds. */

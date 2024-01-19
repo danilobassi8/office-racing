@@ -1,6 +1,8 @@
 import { useFetch } from './useFetch';
 import { mapResponseArrayToJson } from '../utils/utils';
 import { SHEETS_URL } from '../services/globals';
+import { useContext, useEffect, useState } from 'react';
+import { GlobalContext } from '../context/globalContext';
 
 function parseFechaResults(result) {
   const results = mapResponseArrayToJson(result);
@@ -22,6 +24,32 @@ function parseFechaResults(result) {
 
 export function useGetFecha(number: number) {
   return useFetch({ url: `${SHEETS_URL}?fn=readTab&tab=Fecha${number}`, parseResultsFn: parseFechaResults });
+}
+
+export function useGetBestTimes(): {
+  isLoading: boolean;
+  data: any;
+  error: any;
+  refresh: (args?: any) => Promise<any>;
+} {
+  const { isPlayersLoading, playersData } = useContext(GlobalContext);
+  const [loading, setLoading] = useState(true);
+
+  const { data, isLoading: isBestTimesLoading, error, httpCall } = useFetch({
+    url: `${SHEETS_URL}?fn=readTab&tab=Resultados`,
+    parseResultsFn: mapResponseArrayToJson,
+  });
+
+  useEffect(() => {
+    setLoading(isBestTimesLoading == true || isPlayersLoading == true || playersData.length == 0);
+  }, [isBestTimesLoading, isPlayersLoading, playersData]);
+
+  return {
+    isLoading: loading,
+    data,
+    error,
+    refresh: httpCall,
+  };
 }
 
 export function usePostFechaResult() {

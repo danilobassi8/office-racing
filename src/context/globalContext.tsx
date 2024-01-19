@@ -5,7 +5,10 @@ import { mapResponseArrayToJson } from '../utils/utils';
 
 export const GlobalContext = createContext({
   globalData: undefined,
+  /** Defines if all data has been loaded. */
   isGlobalContextLoading: true,
+  isPlayersLoading: true,
+  isGlobalLoading: true,
   playersData: [],
 });
 
@@ -17,12 +20,12 @@ const mapAndSortByLastname = (response) => {
 export function GlobalContextProvider({ children }) {
   const [isGlobalContextLoading, setIsGlobalContextLoading] = useState(true);
 
-  const { data: globalData, isLoading: globalLoading, httpCall: loadGlobals } = useFetch({
+  const { data: globalData, isLoading: isGlobalLoading, httpCall: loadGlobals } = useFetch({
     url: `${SHEETS_URL}?fn=readTab&tab=Globals`,
     parseResultsFn: (json) => mapResponseArrayToJson(json)[0],
   });
 
-  const { data: playersData, isLoading: playerLoading, httpCall: loadPlayers } = useFetch({
+  const { data: playersData, isLoading: isPlayersLoading, httpCall: loadPlayers } = useFetch({
     url: `${SHEETS_URL}?fn=readTab&tab=Participantes`,
     parseResultsFn: mapAndSortByLastname,
   });
@@ -33,12 +36,14 @@ export function GlobalContextProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    const isLoading = playerLoading == true || globalLoading == true;
+    const isLoading = isPlayersLoading == true || isGlobalLoading == true;
     setIsGlobalContextLoading(isLoading);
-  }, [playerLoading, globalLoading]);
+  }, [isPlayersLoading, isGlobalLoading]);
 
   return (
-    <GlobalContext.Provider value={{ globalData, playersData, isGlobalContextLoading }}>
+    <GlobalContext.Provider
+      value={{ globalData, playersData, isGlobalContextLoading, isPlayersLoading, isGlobalLoading }}
+    >
       {children}
     </GlobalContext.Provider>
   );

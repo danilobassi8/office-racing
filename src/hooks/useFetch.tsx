@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
 export const useFetch = ({ url, extra = {}, parseResultsFn = undefined }) => {
   const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const httpCall = useCallback(
@@ -15,15 +15,13 @@ export const useFetch = ({ url, extra = {}, parseResultsFn = undefined }) => {
         setIsLoading(false);
 
         // we could want to parse results before setting the data
-        if (parseResultsFn) {
-          setData(parseResultsFn(json));
-        } else {
-          setData(json);
-        }
+        const result = parseResultsFn ? parseResultsFn(json) : json;
+        setData(result);
         setError(null);
-        return json;
+        return result;
       } catch (error) {
         setError(`${error} Could not Fetch Data `);
+        console.error(error);
         setIsLoading(false);
       }
     },

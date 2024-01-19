@@ -1,29 +1,45 @@
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList } from 'recharts';
 import { millisecondsToTime } from '../../utils/utils';
-import { useContext } from 'react';
-import { GlobalContext } from '../../context/globalContext';
 
-export function PodiumChart({ data }) {
-  const { playersData } = useContext(GlobalContext);
-  const getPlayerNameBySlackUser = (slack) => {
-    const player = playersData.find((el) => el.slack == slack);
-    return `${player.name} ${player.lastname}`;
-  };
+export function PodiumChart({ data, dataKey }) {
+  const sortedData = data?.sort((a, b) => {
+    const aValue = a[dataKey];
+    const bValue = b[dataKey];
 
-  const sortedData = data?.sort((a, b) => a.time - b.time);
+    if (!aValue) {
+      return 1;
+    }
+
+    if (!bValue) {
+      return -1;
+    }
+
+    return aValue - bValue;
+  });
 
   return (
     <div className="chart podium-chart w-100 h-100">
       <ResponsiveContainer width="100%" height="95%">
         <BarChart data={sortedData} layout="vertical" barCategoryGap={10}>
           <XAxis type="number" hide />
-          <YAxis type="category" width={150} tickFormatter={(e) => getPlayerNameBySlackUser(data[e].player)} />
-          <Bar dataKey="time" fill="#413ea0">
+          <YAxis
+            type="category"
+            width={150}
+            tickFormatter={(e) => {
+              const record = sortedData[e];
+              return `${record.name} ${record.lastname}`;
+            }}
+          />
+          <Bar dataKey={dataKey} fill="#413ea0">
             <LabelList
               position="center"
               fill="yellow"
-              valueAccessor={({ payload }) => millisecondsToTime(payload.time, true)}
-            ></LabelList>
+              valueAccessor={({ payload }) => {
+                const value = payload[dataKey];
+                if (!value) return '';
+                return millisecondsToTime(payload[dataKey], true);
+              }}
+            />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
