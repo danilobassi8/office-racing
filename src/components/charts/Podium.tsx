@@ -1,7 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList } from 'recharts';
 import { millisecondsToTime } from '../../utils/utils';
 
-export function PodiumChart({ data, dataKey }) {
+export function PodiumChart({ data, dataKey, userDataKey = 'slack' }) {
   const sortedData = data?.sort((a, b) => {
     const aValue = a[dataKey];
     const bValue = b[dataKey];
@@ -38,6 +38,13 @@ export function PodiumChart({ data, dataKey }) {
                 const value = payload[dataKey];
                 if (!value) return '';
                 return millisecondsToTime(payload[dataKey], true);
+              }}
+            />
+            <LabelList
+              position="insideLeft"
+              fill="var(--text-main)"
+              valueAccessor={(payload) => {
+                return `${sortedData.findIndex((el) => el[userDataKey] == payload[userDataKey])}`;
               }}
             />
           </Bar>
