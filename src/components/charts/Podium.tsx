@@ -44,7 +44,7 @@ export function PodiumChart({ data, dataKey, userDataKey = 'slack' }) {
               position="insideLeft"
               fill="var(--text-main)"
               valueAccessor={(payload) => {
-                return `${sortedData.findIndex((el) => el[userDataKey] == payload[userDataKey])}`;
+                return `${sortedData.findIndex((el) => el[userDataKey] == payload[userDataKey]) +1}`;
               }}
             />
           </Bar>
