@@ -103,3 +103,8 @@ main.content {
   width: 100%;
   position: relative;
 }
+
+.focused {
+    box-shadow: 0 0 0 2px #0096bfab;
+    box-shadow: 0 0 0 2px var(--focus);
+}

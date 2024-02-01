@@ -75,19 +75,19 @@ export function Home() {
 
               return (
                 <Link to={`/home?fecha=${idx}`} key={idx}>
-                  <button disabled={disabled} {...disabledTooltipProps}>
+                  <button
+                    disabled={disabled}
+                    {...disabledTooltipProps}
+                    className={idx === searchParamFecha ? 'focused' : ''}
+                  >
                     Fecha {idx}
                   </button>
                 </Link>
               );
             })}
-
         </Tabs>
-        <PodiumChart data={dataWithPlayers} dataKey={`Fecha${currentGlobalFecha}`} />
-        <Tooltip
-          id="home-disabled-tooltip"
-          style={{ backgroundColor: 'var(--background)' }}
-        />
+        <PodiumChart data={dataWithPlayers} dataKey={`Fecha${searchParamFecha}`} />
+        <Tooltip id="home-disabled-tooltip" style={{ backgroundColor: 'var(--button-hover)' }} />
       </>
     );
   };
