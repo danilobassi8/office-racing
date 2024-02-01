@@ -6,6 +6,7 @@ import { GlobalContext } from '../context/globalContext';
 import { matchInfoWithPlayers } from '../utils/utils';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Tabs } from '../components/tabs/Tabs';
+import { Tooltip } from 'react-tooltip';
 
 export function Home() {
   const { data, isLoading, error, refresh } = useGetBestTimes();
@@ -57,7 +58,6 @@ export function Home() {
 
     return (
       <>
-        {/* <h2 className="text-center">Resultados Fecha {currentGlobalFecha}</h2> */}
         <Tabs>
           {Array(maxFechas)
             .fill('')
@@ -65,14 +65,29 @@ export function Home() {
               const idx = i + 1;
               const disabled = idx > currentGlobalFecha;
 
+              const disabledTooltipProps: any = disabled
+                ? {
+                    'data-tooltip-id': 'home-disabled-tooltip',
+                    'data-tooltip-content': `La Fecha ${idx} todavía no está activa`,
+                    'data-tooltip-place': 'bottom',
+                  }
+                : {};
+
               return (
                 <Link to={`/home?fecha=${idx}`} key={idx}>
-                  <button disabled={disabled}>Fecha {idx}</button>
+                  <button disabled={disabled} {...disabledTooltipProps}>
+                    Fecha {idx}
+                  </button>
                 </Link>
               );
             })}
+
         </Tabs>
         <PodiumChart data={dataWithPlayers} dataKey={`Fecha${currentGlobalFecha}`} />
+        <Tooltip
+          id="home-disabled-tooltip"
+          style={{ backgroundColor: 'var(--background)' }}
+        />
       </>
     );
   };

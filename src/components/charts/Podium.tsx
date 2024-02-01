@@ -18,7 +18,7 @@ export function PodiumChart({ data, dataKey, userDataKey = 'slack' }) {
   });
 
   return (
-    <div className="chart podium-chart w-100 h-100">
+    <div className="chart podium-chart w-100 h-100" >
       <ResponsiveContainer width="100%" height="95%">
         <BarChart data={sortedData} layout="vertical" barCategoryGap={10}>
           <XAxis type="number" hide />
