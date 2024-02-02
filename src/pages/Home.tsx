@@ -1,58 +1,22 @@
 import { PodiumChart } from '../components/charts/Podium';
 import { Loading } from '../components/utils/Loading';
-import { useGetBestTimes } from '../hooks/useFecha';
-import { useEffect, useContext, useState } from 'react';
-import { GlobalContext } from '../context/globalContext';
-import { matchInfoWithPlayers } from '../utils/utils';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Tabs } from '../components/tabs/Tabs';
 import { Tooltip } from 'react-tooltip';
-
-function useHome() {
-  const {
-    data: bestTimes,
-    isLoading: isBestTimesLoading,
-    error: errorGettingBestTimes,
-    refresh: refreshBestTimes,
-  } = useGetBestTimes();
-  const { isGlobalContextLoading, globalData, playersData } = useContext(GlobalContext);
-  const [searchParams] = useSearchParams();
-
-  // call refresh when globalData is ready
-  useEffect(() => {
-    refreshBestTimes();
-  }, []);
-
-  const dataWithPlayers = bestTimes && playersData ? matchInfoWithPlayers(bestTimes, playersData) : [];
-  const searchParamFecha = parseInt(searchParams.get('fecha') || '1');
-
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setIsLoading(isGlobalContextLoading || isBestTimesLoading);
-  }, [isGlobalContextLoading, isBestTimesLoading]);
-
-  return {
-    isLoading,
-    searchParamFecha,
-    errorGettingBestTimes,
-    refreshBestTimes,
-    currentGlobalFecha: globalData?.FechaActual,
-    maxFechas: globalData?.MaxFechas,
-    dataWithPlayers,
-  };
-}
+import { usePlayersBestTimes } from '../hooks/usePlayersBestTimes';
 
 export function Home() {
   const {
     dataWithPlayers,
     maxFechas,
     isLoading,
-    searchParamFecha,
     errorGettingBestTimes,
     refreshBestTimes,
     currentGlobalFecha,
-  } = useHome();
+  } = usePlayersBestTimes();
+
+  const [searchParams] = useSearchParams();
+  const searchParamFecha = parseInt(searchParams.get('fecha') || '1');
 
   const renderContent = () => {
     if (isLoading) {

@@ -25,7 +25,12 @@
 
   .nav-item:hover {
     border-radius: 10px;
-    --icon-color: dodgerblue;
+    --icon-color: var(--selection);
+  }
+
+  .nav-item .active {
+    border-radius: 10px;
+    --icon-color: var(--links);
   }
 }
 

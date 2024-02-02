@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import { App } from './components/App';
-import { createHashRouter, RouterProvider, redirect } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 
 import './styles/water.css';
 import './styles/global.css';
@@ -9,6 +9,7 @@ import './styles/animations.css';
 // TODO: move routes and lazy load
 import { Home } from './pages/Home';
 import { AddResult } from './pages/AddResult';
+import { LeaderBoard } from './pages/LeaderBoards';
 const router = createHashRouter([
   {
     path: '/',
@@ -25,6 +26,10 @@ const router = createHashRouter([
       {
         path: '/add',
         element: <AddResult />,
+      },
+      {
+        path: '/leaderboard',
+        element: <LeaderBoard />,
       },
     ],
   },
