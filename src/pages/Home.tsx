@@ -1,9 +1,11 @@
-import { PodiumChart } from '../components/charts/Podium';
+import { PodiumChart } from '../components/charts/PodiumChart';
 import { Loading } from '../components/utils/Loading';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Tabs } from '../components/tabs/Tabs';
 import { Tooltip } from 'react-tooltip';
-import { usePlayersBestTimes } from '../hooks/usePlayersBestTimes';
+import { ErrorMessage } from '../components/utils/ErrorMessage';
+import { useContext } from 'react';
+import { PlayersDataContext } from '../context/PlayersData';
 
 export function Home() {
   const {
@@ -13,21 +15,21 @@ export function Home() {
     errorGettingBestTimes,
     refreshBestTimes,
     currentGlobalFecha,
-  } = usePlayersBestTimes();
+  } = useContext(PlayersDataContext);
 
   const [searchParams] = useSearchParams();
   const searchParamFecha = parseInt(searchParams.get('fecha') || '1');
 
   const renderContent = () => {
     if (isLoading) {
-      return <Loading style={{ height: '350px', marginTop: '25vh' }} />;
+      return <Loading />;
     }
 
     if (errorGettingBestTimes) {
       return (
-        <HomeError errorMessage="Error obteniendo los mejores tiempos.">
+        <ErrorMessage errorMessage="Error obteniendo los mejores tiempos.">
           <button onClick={refreshBestTimes}>Reintentar</button>
-        </HomeError>
+        </ErrorMessage>
       );
     }
 
@@ -69,11 +71,11 @@ export function Home() {
       return (
         <>
           {TABS}
-          <HomeError errorMessage={`La Fecha ${searchParamFecha} no está activa todavía.`}>
+          <ErrorMessage errorMessage={`La Fecha ${searchParamFecha} no está activa todavía.`}>
             <Link to={`/home?fecha=${currentGlobalFecha}`} className="btn">
               Ir a la Fecha actual
             </Link>
-          </HomeError>
+          </ErrorMessage>
         </>
       );
     }
@@ -81,11 +83,11 @@ export function Home() {
       return (
         <>
           {TABS}
-          <HomeError errorMessage="La fecha introducida no es valida.">
+          <ErrorMessage errorMessage="La fecha introducida no es valida.">
             <Link to={`/home?fecha=${currentGlobalFecha}`} className="btn">
               Ir a la Fecha actual
             </Link>
-          </HomeError>
+          </ErrorMessage>
         </>
       );
     }
@@ -99,14 +101,4 @@ export function Home() {
   };
 
   return <>{renderContent()}</>;
-}
-
-export function HomeError({ errorMessage, children = undefined }) {
-  return (
-    <div className="w-100 d-flex align-center flex-col">
-      <h1>Error: </h1>
-      <h4 style={{ marginTop: '20px' }}>{errorMessage}</h4>
-      {children}
-    </div>
-  );
 }

@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import './Tabs.css';
 
-export function Tabs({ children }) {
+export function Tabs({ children, center = false }) {
   const itemList = useRef<HTMLUListElement>(undefined);
   const leftArrow = useRef(null);
   const rightArrow = useRef(null);
@@ -46,7 +46,7 @@ export function Tabs({ children }) {
     <>
       <div className="scrollable-tabs-container">
         <Arrow ref={leftArrow} onScroll={() => scroll(-200)} direction="left" />
-        <ul ref={itemList} onScroll={manageArrows}>
+        <ul ref={itemList} onScroll={manageArrows} style={{ justifyContent: center ? 'center' : 'flex-start' }}>
           {children}
         </ul>
         <Arrow ref={rightArrow} onScroll={() => scroll(200)} direction="right" />
