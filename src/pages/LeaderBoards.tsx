@@ -8,18 +8,16 @@ import { PlayersDataContext } from '../context/PlayersData';
 
 export function LeaderBoard() {
   const { isLoading, errorGettingBestTimes, dataWithPlayers, refreshBestTimes } = useContext(PlayersDataContext);
-  const dataGroupedByCar = useMemo(
-    () =>
-      dataWithPlayers.reduce((result, current) => {
-        const car = current.car;
-
-        // Initialize the group for the current car if it doesn't exist
-        result[car] = result[car] || [];
-        result[car].push(current);
-        return result;
-      }, {}),
-    [dataWithPlayers]
-  );
+  const dataGroupedByCar = useMemo(() => {
+    if (!dataWithPlayers) return undefined;
+    const map = dataWithPlayers.reduce((result, current) => {
+      // Initialize the group for the current car if it doesn't exist
+      result[current.car] = result[current.car] || [];
+      result[current.car].push(current);
+      return result;
+    }, {});
+    return Object.values(map);
+  }, [dataWithPlayers]);
 
   const render = () => {
     if (isLoading) return <Loading />;
@@ -30,6 +28,8 @@ export function LeaderBoard() {
           <button onClick={refreshBestTimes}>Reintentar</button>
         </ErrorMessage>
       );
+
+    console.log(dataWithPlayers);
 
     return (
       <>

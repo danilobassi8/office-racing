@@ -26,7 +26,7 @@ export function PlayersDataContextProvider({ children }) {
     refreshBestTimes();
   }, []);
 
-  const dataWithPlayers = bestTimes && playersData ? matchInfoWithPlayers(bestTimes, playersData) : [];
+  const dataWithPlayers = bestTimes && playersData ? matchInfoWithPlayers(bestTimes, playersData) : undefined;
 
   const [isLoading, setIsLoading] = useState(true);
 
