@@ -105,6 +105,10 @@ main.content {
 }
 
 .focused {
-    box-shadow: 0 0 0 2px #0096bfab;
-    box-shadow: 0 0 0 2px var(--focus);
+  box-shadow: 0 0 0 2px #0096bfab;
+  box-shadow: 0 0 0 2px var(--focus);
+}
+
+a.btn {
+  text-decoration: none !important;
 }

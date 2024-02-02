@@ -106,7 +106,8 @@ body {
   }
 }
 
-button {
+button,
+.btn {
   transition: background-color 0.1s linear, border-color 0.1s linear, color 0.1s linear, box-shadow 0.1s linear,
     transform 0.1s ease;
   transition: background-color var(--animation-duration) linear, border-color var(--animation-duration) linear,
@@ -115,7 +116,8 @@ button {
 }
 
 @media (prefers-color-scheme: dark) {
-  button {
+  button,
+  .btn {
     transition: background-color 0.1s linear, border-color 0.1s linear, color 0.1s linear, box-shadow 0.1s linear,
       transform 0.1s ease;
     transition: background-color var(--animation-duration) linear, border-color var(--animation-duration) linear,
@@ -355,6 +357,7 @@ a > strong {
 }
 
 button,
+.btn,
 select,
 input[type='submit'],
 input[type='reset'],
@@ -404,7 +407,8 @@ input {
   }
 }
 
-button {
+button,
+.btn {
   color: #1d1d1d;
   color: var(--form-text);
   background-color: #efefef;
@@ -420,14 +424,16 @@ button {
 }
 
 @media (prefers-color-scheme: dark) {
-  button {
+  button,
+  .btn {
     background-color: #161f27;
     background-color: var(--background);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-  button {
+  button,
+  .btn {
     color: #fff;
     color: var(--form-text);
   }
@@ -491,7 +497,8 @@ select {
   }
 }
 
-button {
+button,
+.btn {
   background-color: #d0cfcf;
   background-color: var(--button-base);
   padding-right: 30px;
@@ -499,7 +506,8 @@ button {
 }
 
 @media (prefers-color-scheme: dark) {
-  button {
+  button,
+  .btn {
     background-color: #0c151c;
     background-color: var(--button-base);
   }
@@ -547,13 +555,15 @@ input[type='button'] {
   }
 }
 
-button:hover {
+button:hover,
+.btn:hover {
   background: #9b9b9b;
   background: var(--button-hover);
 }
 
 @media (prefers-color-scheme: dark) {
-  button:hover {
+  button:hover,
+  .btn:hover {
     background: #040a0f;
     background: var(--button-hover);
   }
@@ -625,6 +635,7 @@ input:not([type='checkbox']):not([type='radio']),
 input[type='range'],
 select,
 button,
+.btn,
 textarea {
   -webkit-appearance: none;
 }
@@ -723,13 +734,15 @@ select:focus {
   }
 }
 
-button:focus {
+button:focus,
+.btn:focus {
   box-shadow: 0 0 0 2px #0096bfab;
   box-shadow: 0 0 0 2px var(--focus);
 }
 
 @media (prefers-color-scheme: dark) {
-  button:focus {
+  button:focus,
+  .btn:focus {
     box-shadow: 0 0 0 2px #0096bfab;
     box-shadow: 0 0 0 2px var(--focus);
   }
@@ -760,6 +773,8 @@ button:active {
 input:disabled,
 select:disabled,
 button:disabled,
+.btn:disabled,
+.btn.disabled,
 textarea:disabled {
   cursor: not-allowed;
   opacity: 0.5;
@@ -1495,12 +1510,14 @@ body > footer {
   summary,
   details,
   button,
+  .btn,
   input,
   textarea {
     background-color: #fff;
   }
 
   button,
+  .btn,
   input,
   textarea {
     border: 1px solid #000;
@@ -1516,6 +1533,7 @@ body > footer {
   pre,
   code,
   button,
+  .btn,
   input,
   textarea,
   footer,
