@@ -1,6 +1,6 @@
 export const BAR_COLORS = [
   '#413ea0',
-  '#D64E4A',
+  '#0060BC',
   '#007CC5',
   '#0093BE',
   '#00A8AE',
