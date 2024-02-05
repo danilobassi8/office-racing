@@ -1,10 +1,13 @@
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList } from 'recharts';
 import { millisecondsToTime } from '../../utils/utils';
+import { BAR_COLORS } from '../../utils/colors';
 
-export function LeaderBoardChart({ data, dataKey, userDataKey = 'slack' }) {
+const ANIMATION_TOTAL_DURATION_MS = 250;
+
+export function LeaderBoardChart({ data, sortKey, barKeys, userDataKey = 'slack' }) {
   const sortedData = data?.sort((a, b) => {
-    const aValue = a[dataKey];
-    const bValue = b[dataKey];
+    const aValue = a[sortKey];
+    const bValue = b[sortKey];
 
     if (!aValue) {
       return 1;
@@ -16,6 +19,8 @@ export function LeaderBoardChart({ data, dataKey, userDataKey = 'slack' }) {
 
     return aValue - bValue;
   });
+
+  const ANIMATION_DURATION_PER_BAR = ANIMATION_TOTAL_DURATION_MS / barKeys.length;
 
   return (
     <div className="chart podium-chart w-100 h-100">
@@ -30,24 +35,40 @@ export function LeaderBoardChart({ data, dataKey, userDataKey = 'slack' }) {
               return `${record.name} ${record.lastname}`;
             }}
           />
-          <Bar dataKey={dataKey} fill="#413ea0">
-            <LabelList
-              position="center"
-              fill="yellow"
-              valueAccessor={({ payload }) => {
-                const value = payload[dataKey];
-                if (!value) return '';
-                return millisecondsToTime(payload[dataKey], true);
-              }}
-            />
-            <LabelList
-              position="insideLeft"
-              fill="var(--text-main)"
-              valueAccessor={(payload) => {
-                return `${sortedData.findIndex((el) => el[userDataKey] == payload[userDataKey]) + 1}`;
-              }}
-            />
-          </Bar>
+
+          {barKeys.map((key, idx) => {
+            return (
+              <Bar
+                dataKey={key}
+                fill={BAR_COLORS[idx]}
+                stackId={userDataKey}
+                key={idx}
+                animationDuration={ANIMATION_DURATION_PER_BAR}
+                animationBegin={ANIMATION_DURATION_PER_BAR * idx}
+                animationEasing="linear"
+              >
+                <LabelList
+                  position="center"
+                  fill="var(--text-main)"
+                  valueAccessor={({ payload }) => {
+                    const value = payload[key];
+                    if (!value) return '';
+                    return millisecondsToTime(payload[key], true);
+                  }}
+                />
+
+                {idx === 0 && (
+                  <LabelList
+                    position="insideLeft"
+                    fill="var(--text-main)"
+                    valueAccessor={(payload) => {
+                      return `${sortedData.findIndex((el) => el[userDataKey] == payload[userDataKey]) + 1}`;
+                    }}
+                  />
+                )}
+              </Bar>
+            );
+          })}
         </BarChart>
       </ResponsiveContainer>
     </div>

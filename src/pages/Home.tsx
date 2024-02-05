@@ -18,7 +18,7 @@ export function Home() {
   } = useContext(PlayersDataContext);
 
   const [searchParams] = useSearchParams();
-  const searchParamFecha = parseInt(searchParams.get('fecha') || '1');
+  const searchParamFecha = parseInt(searchParams.get('fecha') || (currentGlobalFecha ?? 1));
 
   const renderContent = () => {
     if (isLoading) {
@@ -46,7 +46,6 @@ export function Home() {
                 ? {
                     'data-tooltip-id': 'home-disabled-tooltip',
                     'data-tooltip-content': `La Fecha ${idx} todavía no está activa`,
-                    'data-tooltip-place': 'bottom',
                   }
                 : {};
 
@@ -63,7 +62,7 @@ export function Home() {
               );
             })}
         </Tabs>
-        <Tooltip id="home-disabled-tooltip" style={{ backgroundColor: 'var(--button-hover)' }} />
+        <Tooltip id="home-disabled-tooltip" style={{ backgroundColor: 'var(--button-hover)' }} place="bottom" />
       </>
     );
 

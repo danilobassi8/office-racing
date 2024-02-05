@@ -5,19 +5,20 @@ import { Loading } from '../components/utils/Loading';
 import { Tabs } from '../components/tabs/Tabs';
 import { Link } from 'react-router-dom';
 import { PlayersDataContext } from '../context/PlayersData';
+import { Tooltip } from 'react-tooltip';
+
+function filterDataToRender(data: any[], maxMap: number, keysMustHave: string[]) {
+  return data
+    .filter((el: any) => keysMustHave.every((key) => el[key]))
+    .map((el) => {
+      return { ...el, sumOfTimes: keysMustHave.reduce((acc, current) => acc + el[current], 0) };
+    });
+}
 
 export function LeaderBoard() {
-  const { isLoading, errorGettingBestTimes, dataWithPlayers, refreshBestTimes } = useContext(PlayersDataContext);
-  const dataGroupedByCar = useMemo(() => {
-    if (!dataWithPlayers) return undefined;
-    const map = dataWithPlayers.reduce((result, current) => {
-      // Initialize the group for the current car if it doesn't exist
-      result[current.car] = result[current.car] || [];
-      result[current.car].push(current);
-      return result;
-    }, {});
-    return Object.values(map);
-  }, [dataWithPlayers]);
+  const { isLoading, errorGettingBestTimes, dataWithPlayers, refreshBestTimes, currentGlobalFecha } = useContext(
+    PlayersDataContext
+  );
 
   const render = () => {
     if (isLoading) return <Loading />;
@@ -29,7 +30,10 @@ export function LeaderBoard() {
         </ErrorMessage>
       );
 
-    console.log(dataWithPlayers);
+    const keysMustHave = Array(currentGlobalFecha)
+      .fill(undefined)
+      .map((_, idx) => `Fecha${idx + 1}`);
+    const dataToRender = filterDataToRender(dataWithPlayers, currentGlobalFecha, keysMustHave);
 
     return (
       <>
@@ -37,11 +41,18 @@ export function LeaderBoard() {
           <Link className="btn" to="./?tab=individual">
             Individual
           </Link>
-          <Link className="btn" to="./?tab=grupal">
+          <Link
+            onClick={(e) => e.preventDefault()}
+            className="btn disabled"
+            to="./?tab=grupal"
+            data-tooltip-id="leaderboard-tooltip"
+            data-tooltip-content="Próximamente"
+          >
             Grupal
           </Link>
         </Tabs>
-        <LeaderBoardChart data={dataWithPlayers} dataKey={'Fecha1'} />
+        <LeaderBoardChart data={dataToRender} sortKey="sumOfTimes" barKeys={keysMustHave} />
+        <Tooltip id="leaderboard-tooltip" style={{ backgroundColor: 'var(--button-hover)' }} place="bottom" />
       </>
     );
   };
