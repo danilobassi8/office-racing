@@ -50,6 +50,7 @@ export function LeaderBoardChart({ data, sortKey, barKeys, userDataKey = 'slack'
                 <LabelList
                   position="center"
                   fill="var(--text-main)"
+                  className="hide-on-small"
                   valueAccessor={({ payload }) => {
                     const value = payload[key];
                     if (!value) return '';
