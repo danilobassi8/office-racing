@@ -54,7 +54,7 @@ export function millisecondsToTime(milliseconds, toString = false) {
 
   if (toString) {
     const pad = (n: number, zeros) => `${n.toString().padStart(zeros, '0')}`;
-    return `${pad(minutes, 2)}:${pad(seconds, 2)}:${pad(ms, 3)}`;
+    return `${pad(minutes, 2)}:${pad(seconds, 2)}:${pad(Math.round(ms), 3)}`;
   }
   return {
     minutes,

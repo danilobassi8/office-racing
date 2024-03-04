@@ -45,10 +45,12 @@ main.content {
 
 .chart {
   height: 800px !important;
+  overflow: hidden;
 }
 
 .podium-chart {
   margin-top: 30px;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {
