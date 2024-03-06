@@ -10,3 +10,5 @@ export const BAR_COLORS = [
   '#006291',
   '#980E1E',
 ];
+
+export const PENALTY_COLOR = '#bd123e';

@@ -7,17 +7,10 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { PlayersDataContext } from '../context/PlayersData';
 import { Tooltip } from 'react-tooltip';
 import { GlobalBoardChart } from '../components/charts/GrupalBoardChart';
+import { PENALTY_TIME_MS } from '../services/globals';
 
-/** Filter players that have all the keys */
-function filterIndividualPlayerData(data: any[], keysMustHave: string[]) {
-  return data
-    .filter((el: any) => keysMustHave.every((key) => el[key]))
-    .map((el) => {
-      return { ...el, sumOfTimes: keysMustHave.reduce((acc, current) => acc + el[current], 0) };
-    });
-}
 
-function filterGrupalDataToRender(data: any[], keysMustHave: string[], maxFecha = 1) {
+function filterGrupalDataToRender(data: any[], keysMustHave: string[]) {
   const KEY_TO_GROUP = 'car';
 
   const groupedDataByCar = data.reduce((acc, el) => {
@@ -53,16 +46,17 @@ function filterGrupalDataToRender(data: any[], keysMustHave: string[], maxFecha 
     }
 
     const data = playersData.map((player) => {
+      const newPlayer = structuredClone(player);
       keysMustHave.map((key) => {
-        if (!player[key]) {
-          player[key + '_timeParsed'] = worstResults[key];
-          player[key + '_fillMode'] = 'worst';
+        if (!newPlayer[key]) {
+          newPlayer[key + '_timeParsed'] = worstResults[key] + PENALTY_TIME_MS;
+          newPlayer[key + '_fillMode'] = 'penalty';
         } else {
-          player[key + '_fillMode'] = 'result';
-          player[key + '_timeParsed'] = player[key];
+          newPlayer[key + '_fillMode'] = 'result';
+          newPlayer[key + '_timeParsed'] = newPlayer[key];
         }
       });
-      return player;
+      return newPlayer;
     });
 
     results.push({ car, data });
@@ -93,12 +87,12 @@ export function LeaderBoard() {
       .map((_, idx) => `Fecha${idx + 1}`);
 
     let chart = undefined;
+    const grupalData = filterGrupalDataToRender(dataWithPlayers, keysMustHave);
     if (tab == 'individual' || tab == '') {
-      const dataToRender = filterIndividualPlayerData(dataWithPlayers, keysMustHave);
-      chart = <LeaderBoardChart data={dataToRender} sortKey="sumOfTimes" barKeys={keysMustHave} />;
+      const playersData = grupalData.map((d) => d.data).flat();
+      chart = <LeaderBoardChart data={playersData} barKeys={keysMustHave} />;
     } else if (tab == 'grupal') {
-      const dataToRender = filterGrupalDataToRender(dataWithPlayers, keysMustHave, currentGlobalFecha);
-      chart = <GlobalBoardChart data={dataToRender} keysMustHave={keysMustHave} />;
+      chart = <GlobalBoardChart data={grupalData} keysMustHave={keysMustHave} />;
     } else {
       return (
         <ErrorMessage errorMessage={`El tab "${tab}" es invalido`}>

@@ -1,21 +1,13 @@
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList, Rectangle } from 'recharts';
 import { millisecondsToTime } from '../../utils/utils';
-import { BAR_COLORS } from '../../utils/colors';
+import { BAR_COLORS, PENALTY_COLOR } from '../../utils/colors';
 
 const ANIMATION_TOTAL_DURATION_MS = 250;
 
-export function LeaderBoardChart({ data, sortKey, barKeys, userDataKey = 'slack' }) {
-  const sortedData = data?.sort((a, b) => {
-    const aValue = a[sortKey];
-    const bValue = b[sortKey];
-
-    if (!aValue) {
-      return 1;
-    }
-
-    if (!bValue) {
-      return -1;
-    }
+export function LeaderBoardChart({ data, barKeys, userDataKey = 'slack' }) {
+  const sortedData = data?.toSorted((a, b) => {
+    const aValue = barKeys.reduce((acc, nextKey) => acc + a[nextKey + '_timeParsed'], 0);
+    const bValue = barKeys.reduce((acc, nextKey) => acc + b[nextKey + '_timeParsed'], 0);
 
     return aValue - bValue;
   });
@@ -39,22 +31,21 @@ export function LeaderBoardChart({ data, sortKey, barKeys, userDataKey = 'slack'
           {barKeys.map((key, idx) => {
             return (
               <Bar
-                dataKey={key}
-                fill={BAR_COLORS[idx]}
+                dataKey={key + '_timeParsed'}
                 stackId={userDataKey}
                 key={idx}
                 animationDuration={ANIMATION_DURATION_PER_BAR}
                 animationBegin={ANIMATION_DURATION_PER_BAR * idx}
                 animationEasing="linear"
+                shape={(props) => CustomBar(props, idx, key)}
               >
                 <LabelList
                   position="center"
                   fill="var(--text-main)"
                   className="hide-on-small"
                   valueAccessor={({ payload }) => {
-                    const value = payload[key];
-                    if (!value) return '';
-                    return millisecondsToTime(payload[key], true);
+                    const value = payload[key + '_timeParsed'];
+                    return millisecondsToTime(value, true);
                   }}
                 />
 
@@ -75,3 +66,11 @@ export function LeaderBoardChart({ data, sortKey, barKeys, userDataKey = 'slack'
     </div>
   );
 }
+
+const CustomBar = (props, idx, keyToRender) => {
+  //use explicit fill here, or use the additional css class and make a css selector to update fill there
+  const wasPenalty = props.payload[keyToRender + '_fillMode'] == 'penalty';
+  const fillColor = wasPenalty ? PENALTY_COLOR : BAR_COLORS[idx];
+
+  return <Rectangle {...props} fill={fillColor} />;
+};

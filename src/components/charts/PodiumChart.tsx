@@ -1,10 +1,10 @@
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList, Rectangle } from 'recharts';
 import { millisecondsToTime } from '../../utils/utils';
 import { PENALTY_TIME_MS } from '../../services/globals';
-import { BAR_COLORS } from '../../utils/colors';
+import { BAR_COLORS, PENALTY_COLOR } from '../../utils/colors';
 
 export function PodiumChart({ data, dataKey, userDataKey = 'slack' }) {
-  const sortedData = data?.sort((a, b) => {
+  const sortedData = data?.toSorted((a, b) => {
     const aValue = a[dataKey];
     const bValue = b[dataKey];
 
@@ -59,6 +59,6 @@ export function PodiumChart({ data, dataKey, userDataKey = 'slack' }) {
 
 const CustomBar = (props, result) => {
   //use explicit fill here, or use the additional css class and make a css selector to update fill there
-  const fillColor = result ? BAR_COLORS[0] : BAR_COLORS[1]
+  const fillColor = result ? BAR_COLORS[0] : PENALTY_COLOR;
   return <Rectangle {...props} fill={fillColor} className="" />;
 };
