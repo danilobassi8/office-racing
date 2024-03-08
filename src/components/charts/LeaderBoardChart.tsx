@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList, Rectangle } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList, Rectangle, Tooltip } from 'recharts';
 import { millisecondsToTime } from '../../utils/utils';
 import { BAR_COLORS, PENALTY_COLOR } from '../../utils/colors';
 import { ANIMATION_TOTAL_DURATION_MS } from '../../services/globals';

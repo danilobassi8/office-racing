@@ -125,6 +125,22 @@ a.btn {
   display: none;
 }
 
+.custom-tooltip {
+  background-color: var(--background-body);
+  min-height: 100px;
+  min-width: 100px;
+  border-radius: 10px;
+  border: 1px solid var(--button-hover);
+  padding: 10px;
+  opacity: 0.95;
+
+  li {
+    &::marker {
+      color: var(--bullet-color);
+    }
+  }
+}
+
 @media screen and (max-width: 768px) {
   .hide-on-small {
     display: none;

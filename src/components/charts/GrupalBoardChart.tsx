@@ -1,6 +1,54 @@
-import { Bar, BarChart, LabelList, Rectangle, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import { BAR_COLORS } from '../../utils/colors';
+import { Bar, BarChart, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { BAR_COLORS, PENALTY_COLOR } from '../../utils/colors';
 import { ANIMATION_TOTAL_DURATION_MS } from '../../services/globals';
+import { millisecondsToTime } from '../../utils/utils';
+
+const CustomTooltip = ({ active, payload }, keysMustHave: any[], maxNumOfPlayer) => {
+  if (!active) return <></>;
+
+  const times = payload.at(0).payload.times.flat();
+  const multiplier = payload.at(0).payload.playersCount;
+  const showMultiplierText = multiplier !== maxNumOfPlayer;
+
+  return (
+    <div className="custom-tooltip">
+      <div className="content">
+        {keysMustHave.map((key) => {
+          const keyTimes = times.filter((t) => t.key === key);
+          const keyName = `Fecha ${key.split('Fecha').at(-1)}`;
+          return (
+            <>
+              <span>{keyName}:</span>
+              <ul key={key} style={{ margin: '0px' }}>
+                {...keyTimes.map((time) => {
+                  return (
+                    <li
+                      className="colored-bullet"
+                      style={{ '--bullet-color': time.fillMode === 'penalty' ? PENALTY_COLOR : BAR_COLORS[3] } as any}
+                    >
+                      @{time.user} - {millisecondsToTime(time.time, true)}
+                      {showMultiplierText && <span style={{ color: 'yellow' }}>&nbsp;&nbsp;*</span>}
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          );
+        })}
+
+        {showMultiplierText && (
+          <>
+            <br />
+            <span style={{ fontSize: 'small', color: 'yellow' }}>
+              (*) Estos tiempos fueron multiplicados por {maxNumOfPlayer}
+              {multiplier != 1 ? `/${multiplier}` : ''}.
+            </span>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
 
 function prepareDataToRender(data, keysMustHave) {
   const parsedData = data.map((record) => {
@@ -49,23 +97,29 @@ export function GlobalBoardChart({ data, keysMustHave }) {
           <XAxis type="number" hide />
           <YAxis
             type="category"
-            width={150}
+            width={100}
             tickFormatter={(e) => {
               const record = sortedData[e];
               return record.car;
             }}
           />
 
-          {...new Array(maxNumOfPlayer).fill(undefined).map((_, playerIdx) => {
-            let acc = 0;
+          <Tooltip
+            content={(a: any) => CustomTooltip(a, keysMustHave, maxNumOfPlayer)}
+            cursor={{ fill: 'transparent' }}
+            animationEasing="ease-out"
+            animationDuration={ANIMATION_TOTAL_DURATION_MS}
+          />
+
+          {new Array(maxNumOfPlayer).fill(undefined).map((_, playerIdx) => {
             return (
               <Bar
+                key={playerIdx}
                 dataKey={(d) => {
                   const result = d.times[playerIdx];
                   const time = result
                     ? (result.reduce((acc, n) => acc + n.time, 0) * maxNumOfPlayer) / d.playersCount
                     : 0;
-                  acc += time;
                   return time;
                 }}
                 fill={BAR_COLORS[playerIdx]}
@@ -90,8 +144,4 @@ export function GlobalBoardChart({ data, keysMustHave }) {
       </ResponsiveContainer>
     </div>
   );
-}
-
-function CustomBarShape(props, id) {
-  return <Rectangle {...props} className={id + props.width} />;
 }
