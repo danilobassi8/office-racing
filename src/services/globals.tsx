@@ -3,3 +3,5 @@ export const SHEETS_URL =
 
 export const PENALTY_SECONDS = 10;
 export const PENALTY_TIME_MS = PENALTY_SECONDS * 1000;
+
+export const ANIMATION_TOTAL_DURATION_MS = 250;

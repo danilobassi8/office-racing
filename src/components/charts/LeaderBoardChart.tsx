@@ -1,8 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList, Rectangle } from 'recharts';
 import { millisecondsToTime } from '../../utils/utils';
 import { BAR_COLORS, PENALTY_COLOR } from '../../utils/colors';
-
-const ANIMATION_TOTAL_DURATION_MS = 250;
+import { ANIMATION_TOTAL_DURATION_MS } from '../../services/globals';
 
 export function LeaderBoardChart({ data, barKeys, userDataKey = 'slack' }) {
   const sortedData = data?.toSorted((a, b) => {

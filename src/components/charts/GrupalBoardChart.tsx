@@ -1,6 +1,6 @@
-import { Bar, BarChart, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, LabelList, Rectangle, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { BAR_COLORS } from '../../utils/colors';
-import { millisecondsToTime } from '../../utils/utils';
+import { ANIMATION_TOTAL_DURATION_MS } from '../../services/globals';
 
 function prepareDataToRender(data, keysMustHave) {
   const parsedData = data.map((record) => {
@@ -40,6 +40,8 @@ function prepareDataToRender(data, keysMustHave) {
 export function GlobalBoardChart({ data, keysMustHave }) {
   const { sortedData, maxNumOfPlayer } = prepareDataToRender(data, keysMustHave);
 
+  const ANIMATION_DURATION_PER_BAR = ANIMATION_TOTAL_DURATION_MS / maxNumOfPlayer;
+
   return (
     <div className="chart podium-chart">
       <ResponsiveContainer width="100%" height="95%">
@@ -53,21 +55,43 @@ export function GlobalBoardChart({ data, keysMustHave }) {
               return record.car;
             }}
           />
-          <Bar dataKey={(d) => d.parsedTime} fill={BAR_COLORS[0]}>
-            <LabelList
-              position="insideLeft"
-              fill="var(--text-main)"
-              className="hide-on-small"
-              valueAccessor={(payload) => {
-                const m = (d) => millisecondsToTime(d, true);
-                return `${m(payload.parsedTime)} - (${m(payload.timeCount)} * ${maxNumOfPlayer} / ${
-                  payload.playersCount
-                })`;
-              }}
-            />
-          </Bar>
+
+          {...new Array(maxNumOfPlayer).fill(undefined).map((_, playerIdx) => {
+            let acc = 0;
+            return (
+              <Bar
+                dataKey={(d) => {
+                  const result = d.times[playerIdx];
+                  const time = result
+                    ? (result.reduce((acc, n) => acc + n.time, 0) * maxNumOfPlayer) / d.playersCount
+                    : 0;
+                  acc += time;
+                  return time;
+                }}
+                fill={BAR_COLORS[playerIdx]}
+                animationDuration={ANIMATION_DURATION_PER_BAR}
+                animationBegin={ANIMATION_DURATION_PER_BAR * playerIdx}
+                animationEasing="linear"
+                stackId={''}
+              >
+                <LabelList
+                  position="center"
+                  fill="var(--text-main)"
+                  className="hide-on-small"
+                  valueAccessor={(payload) => {
+                    const player = payload.times[playerIdx];
+                    return player ? `@${player.at(0).user}` : null;
+                  }}
+                />
+              </Bar>
+            );
+          })}
         </BarChart>
       </ResponsiveContainer>
     </div>
   );
+}
+
+function CustomBarShape(props, id) {
+  return <Rectangle {...props} className={id + props.width} />;
 }
