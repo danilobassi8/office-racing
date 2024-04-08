@@ -49,7 +49,7 @@ function filterGrupalDataToRender(data: any[], keysMustHave: string[]) {
       const newPlayer = structuredClone(player);
       keysMustHave.map((key) => {
         if (!newPlayer[key]) {
-          newPlayer[key + '_timeParsed'] = worstResults[key] + PENALTY_TIME_MS;
+          newPlayer[key + '_timeParsed'] = worstResults[key] ? worstResults[key] + PENALTY_TIME_MS : 0;
           newPlayer[key + '_fillMode'] = 'penalty';
         } else {
           newPlayer[key + '_fillMode'] = 'result';

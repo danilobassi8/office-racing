@@ -44,6 +44,11 @@ export function LeaderBoardChart({ data, barKeys, userDataKey = 'slack' }) {
                   className="hide-on-small"
                   valueAccessor={({ payload }) => {
                     const value = payload[key + '_timeParsed'];
+
+                    // handle cases where no one ran
+                    if (value === 0) {
+                      return;
+                    }
                     return millisecondsToTime(value, true);
                   }}
                 />
@@ -71,5 +76,9 @@ const CustomBar = (props, idx, keyToRender) => {
   const wasPenalty = props.payload[keyToRender + '_fillMode'] == 'penalty';
   const fillColor = wasPenalty ? PENALTY_COLOR : BAR_COLORS[idx];
 
+  // handle cases where no one ran
+  if (props[props.dataKey] === 0) {
+    return;
+  }
   return <Rectangle {...props} fill={fillColor} />;
 };
