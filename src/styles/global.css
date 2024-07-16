@@ -149,3 +149,12 @@ a.btn {
     display: inherit;
   }
 }
+
+@media screen and (max-width: 1200px) {
+  .hide-on-1200 {
+    display: none;
+  }
+  .show-on-1200 {
+    display: inherit;
+  }
+}

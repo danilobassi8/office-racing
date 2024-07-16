@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList, Rectangle, Tooltip } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList, Rectangle } from 'recharts';
 import { millisecondsToTime } from '../../utils/utils';
 import { BAR_COLORS, PENALTY_COLOR } from '../../utils/colors';
 import { ANIMATION_TOTAL_DURATION_MS } from '../../services/globals';
@@ -21,10 +21,7 @@ export function LeaderBoardChart({ data, barKeys, userDataKey = 'slack' }) {
           <YAxis
             type="category"
             width={150}
-            tickFormatter={(e) => {
-              const record = sortedData[e];
-              return `${record.name} ${record.lastname}`;
-            }}
+            tick={(e) => <CustomTick {...e} user={sortedData[e.payload.value]} barKeys={barKeys} />}
           />
 
           {barKeys.map((key, idx) => {
@@ -41,7 +38,7 @@ export function LeaderBoardChart({ data, barKeys, userDataKey = 'slack' }) {
                 <LabelList
                   position="center"
                   fill="var(--text-main)"
-                  className="hide-on-small"
+                  className="hide-on-1200"
                   valueAccessor={({ payload }) => {
                     const value = payload[key + '_timeParsed'];
 
@@ -52,16 +49,6 @@ export function LeaderBoardChart({ data, barKeys, userDataKey = 'slack' }) {
                     return millisecondsToTime(value, true);
                   }}
                 />
-
-                {idx === 0 && (
-                  <LabelList
-                    position="insideLeft"
-                    fill="var(--text-main)"
-                    valueAccessor={(payload) => {
-                      return `${sortedData.findIndex((el) => el[userDataKey] == payload[userDataKey]) + 1}`;
-                    }}
-                  />
-                )}
               </Bar>
             );
           })}
@@ -70,6 +57,26 @@ export function LeaderBoardChart({ data, barKeys, userDataKey = 'slack' }) {
     </div>
   );
 }
+
+const CustomTick = (props) => {
+  const { x, y, width, textAnchor, height, user, barKeys, payload } = props;
+
+  const name = `${user.name} ${user.lastname}`;
+  const totalResultMs = barKeys.map((e) => user[`${e}_timeParsed`]).reduce((acc, el) => (acc += el), 0);
+
+  return (
+    <g className="recharts-layer recharts-cartesian-axis-tick">
+      <text width={width} height={height} x={x} y={y} textAnchor={textAnchor} fill="#666">
+        <tspan x="147" dy="0ex">
+          {name}
+        </tspan>
+        <tspan x="147" dy="2ex" fill="var(--rt-color-info)">
+          {millisecondsToTime(totalResultMs, true) as string} - <tspan fill="white"> #{payload.value}</tspan>
+        </tspan>
+      </text>
+    </g>
+  );
+};
 
 const CustomBar = (props, idx, keyToRender) => {
   //use explicit fill here, or use the additional css class and make a css selector to update fill there

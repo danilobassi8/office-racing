@@ -9,7 +9,6 @@ import { Tooltip } from 'react-tooltip';
 import { GlobalBoardChart } from '../components/charts/GrupalBoardChart';
 import { PENALTY_TIME_MS } from '../services/globals';
 
-
 function filterGrupalDataToRender(data: any[], keysMustHave: string[]) {
   const KEY_TO_GROUP = 'car';
 
@@ -66,9 +65,14 @@ function filterGrupalDataToRender(data: any[], keysMustHave: string[]) {
 }
 
 export function LeaderBoard() {
-  const { isLoading, errorGettingBestTimes, dataWithPlayers, refreshBestTimes, currentGlobalFecha } = useContext(
-    PlayersDataContext
-  );
+  const {
+    isLoading,
+    errorGettingBestTimes,
+    dataWithPlayers,
+    refreshBestTimes,
+    currentGlobalFecha,
+    maxFechas,
+  } = useContext(PlayersDataContext);
   const [searchParams] = useSearchParams();
   const tab = (searchParams.get('tab') ?? '').toLowerCase();
 
